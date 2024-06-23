@@ -33,11 +33,11 @@ E="${PLUGIN_PATH}/src/Model/Entity" # Shorthand to entity path
 rm -rf $(pwd)/plugins/${PLUGIN}
 rm -rf ${T}/Wordpress${VER}
 mkdir -p ${T}/Wordpress${VER}
-#rm -rf ${T}/WordpressAbstract # DON'T. classes may be removed between versions
+#rm -rf ${T}/WordpressAbstract # DON'T. classes may differ between versions
 mkdir -p ${T}/WordpressAbstract
 rm -rf ${E}/Wordpress${VER}
 mkdir -p ${E}/Wordpress${VER}
-#rm -rf ${E}/WordpressAbstract # DON'T. classes may be removed between versions
+#rm -rf ${E}/WordpressAbstract # DON'T. classes may differ between versions
 mkdir -p ${E}/WordpressAbstract
 
 # Get the list of all bake-able models. Results will be in CamelCase

@@ -18,7 +18,7 @@ if [ ! -f "${INFLECTOR}" ]; then
 fi
 
 # Configuration
-PREFIX="wp_" # Clean Wordpress table prefix, if any
+PREFIX="wp_" # If WP tables you're baking all have a prefix, provide it here
 CONNECTION="Wordpress${VER}-clean" # Clean Wordpress table prefix, if any
 PLUGIN="CakePHPWordpress" # Name of the plugin to hold Wordpress connector code
 # Path to plugin files, i.e src/Model/Table/ExampleTable.php

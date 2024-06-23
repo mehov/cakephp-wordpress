@@ -21,6 +21,8 @@ class Connector extends Plugin implements \Cake\Event\EventListenerInterface
     private $_symbol;
     private $_blogName;
     private $_datasource;
+    // Auto-prepended to each table. Particularly useful for multisite networks.
+    private $_tablePrefix;
     private $_type;
     private $_localPath;
 
@@ -70,6 +72,22 @@ class Connector extends Plugin implements \Cake\Event\EventListenerInterface
     public function setDatasource($datasource)
     {
         $this->_datasource = $datasource;
+    }
+
+    /**
+     * @return string
+     */
+    public function getTablePrefix()
+    {
+        return $this->_tablePrefix;
+    }
+
+    /**
+     * @param string $tablePrefix
+     */
+    public function setTablePrefix($tablePrefix): void
+    {
+        $this->_tablePrefix = $tablePrefix;
     }
 
     /**
@@ -170,6 +188,10 @@ class Connector extends Plugin implements \Cake\Event\EventListenerInterface
         $this->setSymbol($blogSymbol);
         $this->setBlogName($blog['name']);
         $this->setDatasource($blog['datasource']);
+        // If overriding model classes on App level place them in this subfolder
+        if (!empty($blog['tablePrefix'])) {
+            $this->setTablePrefix($blog['tablePrefix']);
+        }
         $this->setType($blog['type']);
         // If overriding model classes on App level place them in this subfolder
         if (!empty($blog['localPath'])) {
@@ -210,6 +232,19 @@ class Connector extends Plugin implements \Cake\Event\EventListenerInterface
         if (get_class($table) == 'Cake\ORM\Table') {
             throw new InternalErrorException(sprintf('Requested table %s resolves to generic %s. Make sure a concrete table class exists in %s', $tableName, get_class($table), $this->getPath().'src/Model/Table'));
         }
+        /*
+         * Prepend database table name prefix if this blog configuration has one
+         */
+        $flag = $this->getName().'_wpPrefixSet'; // used to check if already set
+        if (!property_exists($table, $flag)) {
+            $table->{$flag} = null; // make sure flag property exists
+        }
+        // If prefix is configured for this blog AND not already set
+        if (!empty($this->getTablePrefix()) && !$table->{$flag}) {
+            $table->setTable($this->getTablePrefix().$table->getTable());
+            $table->{$flag} = true; //already set; prevents e.g. wp_2_wp_2_posts
+        }
+        unset($flag);
         return $table;
     }
 

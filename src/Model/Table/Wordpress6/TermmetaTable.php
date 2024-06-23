@@ -36,7 +36,7 @@ class TermmetaTable extends \CakePHPWordpress\Model\Table\WordpressAbstract\Abst
     {
         parent::initialize($config);
 
-        $this->setTable('wp_termmeta');
+        $this->setTable('termmeta');
         $this->setDisplayField('meta_id');
         $this->setPrimaryKey('meta_id');
     }

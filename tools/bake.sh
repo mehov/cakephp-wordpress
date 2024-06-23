@@ -93,6 +93,11 @@ EOF
     sed -i "s/class ${ALIAS}Table extends Table/class ${ALIAS}Table extends \\\\${PLUGIN}\\\Model\\\Table\\\WordpressAbstract\\\\Abstract${ALIAS}Table/g" "${F}"
     # Delete `use Cake\ORM\Table;`
     sed -i '/^use Cake\\\ORM\\\Table;/d' "${F}"
+    # Remove prefix from setTable(). If prefix is required for specific WP site,
+    # set it in plugin configuration and it will dynamically be used in queries
+    if [ -n "${PREFIX}" ]; then
+        sed -i -E "s/(\\$this->setTable\(')${PREFIX}/\1/" "${F}"
+    fi
 
     #
     # ENTITY

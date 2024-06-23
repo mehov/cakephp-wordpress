@@ -36,7 +36,7 @@ class TermsTable extends \CakePHPWordpress\Model\Table\WordpressAbstract\Abstrac
     {
         parent::initialize($config);
 
-        $this->setTable('wp_terms');
+        $this->setTable('terms');
         $this->setDisplayField('name');
         $this->setPrimaryKey('term_id');
     }

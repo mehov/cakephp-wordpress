@@ -36,7 +36,7 @@ class PostsTable extends \CakePHPWordpress\Model\Table\WordpressAbstract\Abstrac
     {
         parent::initialize($config);
 
-        $this->setTable('wp_posts');
+        $this->setTable('posts');
         $this->setDisplayField('post_status');
         $this->setPrimaryKey('ID');
     }

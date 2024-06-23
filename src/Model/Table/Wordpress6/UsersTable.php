@@ -36,7 +36,7 @@ class UsersTable extends \CakePHPWordpress\Model\Table\WordpressAbstract\Abstrac
     {
         parent::initialize($config);
 
-        $this->setTable('wp_users');
+        $this->setTable('users');
         $this->setDisplayField('user_login');
         $this->setPrimaryKey('ID');
     }

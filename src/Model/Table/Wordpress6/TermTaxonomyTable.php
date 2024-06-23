@@ -36,7 +36,7 @@ class TermTaxonomyTable extends \CakePHPWordpress\Model\Table\WordpressAbstract\
     {
         parent::initialize($config);
 
-        $this->setTable('wp_term_taxonomy');
+        $this->setTable('term_taxonomy');
         $this->setDisplayField('taxonomy');
         $this->setPrimaryKey('term_taxonomy_id');
     }

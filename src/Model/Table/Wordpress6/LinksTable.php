@@ -36,7 +36,7 @@ class LinksTable extends \CakePHPWordpress\Model\Table\WordpressAbstract\Abstrac
     {
         parent::initialize($config);
 
-        $this->setTable('wp_links');
+        $this->setTable('links');
         $this->setDisplayField('link_url');
         $this->setPrimaryKey('link_id');
     }

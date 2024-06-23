@@ -36,7 +36,7 @@ class CommentsTable extends \CakePHPWordpress\Model\Table\WordpressAbstract\Abst
     {
         parent::initialize($config);
 
-        $this->setTable('wp_comments');
+        $this->setTable('comments');
         $this->setDisplayField('comment_author_email');
         $this->setPrimaryKey('comment_ID');
     }

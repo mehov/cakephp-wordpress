@@ -36,7 +36,7 @@ class PostmetaTable extends \CakePHPWordpress\Model\Table\WordpressAbstract\Abst
     {
         parent::initialize($config);
 
-        $this->setTable('wp_postmeta');
+        $this->setTable('postmeta');
         $this->setDisplayField('meta_id');
         $this->setPrimaryKey('meta_id');
     }

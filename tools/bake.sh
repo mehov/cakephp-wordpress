@@ -63,8 +63,12 @@ for NAME in ${LIST}; do
     # TABLE
     #
     # Move freshly baked Table to destination folder
-    mv "$(pwd)/plugins/${PLUGIN}/src/Model/Table/${ALIAS}Table.php" "${T}/Wordpress${VER}/${ALIAS}Table.php"
-    F="${T}/Wordpress${VER}/${ALIAS}Table.php" # shorthand to table class
+    F="${T}/Wordpress${VER}/${ALIAS}Table.php" # shorthand to resulting table class
+    if [ -f "$(pwd)/plugins/${PLUGIN}/src/Model/Table/${ALIAS}Table.php" ]; then
+        mv "$(pwd)/plugins/${PLUGIN}/src/Model/Table/${ALIAS}Table.php" "${F}"
+    else
+        mv "${PLUGIN_PATH}/src/Model/Table/${ALIAS}Table.php" "${F}"
+    fi
     # Correct namespace from generic to Wordpress version specific
     sed -i "s/${PLUGIN}\\\Model\\\Table/${PLUGIN}\\\Model\\\Table\\\Wordpress${VER}/g" "${F}"
     # Table: Abstract
@@ -94,8 +98,12 @@ EOF
     # ENTITY
     #
     # Move freshly baked Entity class to destination folder
-    mv "$(pwd)/plugins/${PLUGIN}/src/Model/Entity/${ENTITY}.php" "${E}/Wordpress${VER}/${ENTITY}.php"
-    F="${E}/Wordpress${VER}/${ENTITY}.php" # shorthand to entity class
+    F="${E}/Wordpress${VER}/${ENTITY}.php" # shorthand to resulting entity class
+    if [ -f "$(pwd)/plugins/${PLUGIN}/src/Model/Entity/${ENTITY}.php" ]; then
+        mv "$(pwd)/plugins/${PLUGIN}/src/Model/Entity/${ENTITY}.php" "${F}"
+    else
+        mv "${PLUGIN_PATH}/src/Model/Entity/${ENTITY}.php" "${F}"
+    fi
     sed -i "s/${PLUGIN}\\\Model\\\Entity/${PLUGIN}\\\Model\\\Entity\\\Wordpress${VER}/g" "${F}"
     # Entity: Abstract
     mkdir -p "${E}/WordpressAbstract"

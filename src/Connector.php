@@ -211,6 +211,7 @@ class Connector extends Plugin implements \Cake\Event\EventListenerInterface
     {
         $tableRegistry = new \Cake\ORM\TableRegistry();
         $tableLocator = $tableRegistry->getTableLocator();
+        $tableLocator->clear();// prevent "already exists in the registry" error
         // Make sure table is looked up in blog type folder
         $tableLocator->addLocation('Model/Table/'.$this->getType());
         $tableIdentifier = $this->_locateModelClass($tableName, 'Table');

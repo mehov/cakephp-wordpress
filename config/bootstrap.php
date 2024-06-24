@@ -7,3 +7,12 @@
 $blogList = \Cake\Core\Configure::read('CakePHPWordpress.blogList');
 $blogSymbol = array_keys($blogList)[0];
 \Cake\Core\Configure::write('CakePHPWordpress.defaultBlog', $blogSymbol);
+
+// Preload options
+$blog = new \CakePHPWordpress\Connector();
+$options = $blog->Options->find('list', [
+    'keyField' => 'option_name',
+    'valueField' => 'option_value',
+])->toArray();
+// TODO store options per blog symbol (requires Entities to know their symbol)
+\Cake\Core\Configure::write('CakePHPWordpress.Options', $options);

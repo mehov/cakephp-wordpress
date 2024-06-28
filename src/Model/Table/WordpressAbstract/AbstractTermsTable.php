@@ -2,9 +2,7 @@
 
 namespace CakePHPWordpress\Model\Table\WordpressAbstract;
 
-use Cake\ORM\Table;
-
-abstract class AbstractTermsTable extends Table
+abstract class AbstractTermsTable extends \CakePHPWordpress\Model\Table\PluginTable
 {
 
 

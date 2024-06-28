@@ -79,9 +79,7 @@ for NAME in ${LIST}; do
 
 namespace ${PLUGIN}\Model\Table\WordpressAbstract;
 
-use Cake\ORM\Table;
-
-abstract class Abstract${ALIAS}Table extends Table
+abstract class Abstract${ALIAS}Table extends \CakePHPWordpress\Model\Table\PluginTable
 {
 
 
@@ -118,9 +116,7 @@ EOF
 
 namespace ${PLUGIN}\Model\Entity\WordpressAbstract;
 
-use Cake\ORM\Entity;
-
-abstract class Abstract${ENTITY} extends Entity
+abstract class Abstract${ENTITY} extends \CakePHPWordpress\Model\Entity\PluginEntity
 {
 
 

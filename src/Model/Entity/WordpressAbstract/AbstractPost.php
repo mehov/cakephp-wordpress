@@ -2,9 +2,7 @@
 
 namespace CakePHPWordpress\Model\Entity\WordpressAbstract;
 
-use Cake\ORM\Entity;
-
-abstract class AbstractPost extends Entity
+abstract class AbstractPost extends \CakePHPWordpress\Model\Entity\PluginEntity
 {
 
     public function _getUrl()

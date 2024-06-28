@@ -2,9 +2,7 @@
 
 namespace CakePHPWordpress\Model\Table\WordpressAbstract;
 
-use Cake\ORM\Table;
-
-abstract class AbstractPostmetaTable extends Table
+abstract class AbstractPostmetaTable extends \CakePHPWordpress\Model\Table\PluginTable
 {
 
 

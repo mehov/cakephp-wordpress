@@ -2,9 +2,7 @@
 
 namespace CakePHPWordpress\Model\Table\WordpressAbstract;
 
-use Cake\ORM\Table;
-
-abstract class AbstractUsersTable extends Table
+abstract class AbstractUsersTable extends \CakePHPWordpress\Model\Table\PluginTable
 {
 
 

@@ -2,9 +2,7 @@
 
 namespace CakePHPWordpress\Model\Entity\WordpressAbstract;
 
-use Cake\ORM\Entity;
-
-abstract class AbstractUser extends Entity
+abstract class AbstractUser extends \CakePHPWordpress\Model\Entity\PluginEntity
 {
 
 

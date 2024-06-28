@@ -2,9 +2,7 @@
 
 namespace CakePHPWordpress\Model\Table\WordpressAbstract;
 
-use Cake\ORM\Table;
-
-abstract class AbstractPostsTable extends Table
+abstract class AbstractPostsTable extends \CakePHPWordpress\Model\Table\PluginTable
 {
 
     public function findPosts($type = 'all', $options = [])

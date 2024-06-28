@@ -143,3 +143,13 @@ done
 
 # Clean up
 rm -rf $(pwd)/plugins/${PLUGIN}
+
+# Copy complete files from ./copy/files
+COPY_FILES_PATH="$(dirname "$0")/copy/files"
+find "${COPY_FILES_PATH}/" -type f | while read -r FILE; do
+  # Replace \${VER} (if any) in source file path with actual ${VER}
+  DESTINATION="${PLUGIN_PATH}/src/Model/"$(echo "${FILE#${COPY_FILES_PATH}/}" | sed "s/\${VER}/$VER/")
+  cp -f "${FILE}" "${DESTINATION}"
+  # Replace \${VER} (if any) in PHP namespaces with actual ${VER}
+  sed -i "/^namespace.*\${VER}.*;$/ s/\${VER}/${VER}/g" "${DESTINATION}"
+done

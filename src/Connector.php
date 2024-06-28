@@ -147,11 +147,7 @@ class Connector extends Plugin implements \Cake\Event\EventListenerInterface
                 'No data source was set for '.$this->getName()
             );
         }
-        // Make sure the table uses the right connection
-        $datasource = $this->getDatasource();
-        $connection = \Cake\Datasource\ConnectionManager::get($datasource);
-        $table->setConnection($connection);
-        unset($datasource, $connection);
+        $table->setPluginConnector($this);
         // Make sure the table uses the right entity class
         $this->_attachEntity($table);
     }
@@ -233,19 +229,6 @@ class Connector extends Plugin implements \Cake\Event\EventListenerInterface
         if (get_class($table) == 'Cake\ORM\Table') {
             throw new InternalErrorException(sprintf('Requested table %s resolves to generic %s. Make sure a concrete table class exists in %s', $tableName, get_class($table), $this->getPath().'src/Model/Table'));
         }
-        /*
-         * Prepend database table name prefix if this blog configuration has one
-         */
-        $flag = $this->getName().'_wpPrefixSet'; // used to check if already set
-        if (!property_exists($table, $flag)) {
-            $table->{$flag} = null; // make sure flag property exists
-        }
-        // If prefix is configured for this blog AND not already set
-        if (!empty($this->getTablePrefix()) && !$table->{$flag}) {
-            $table->setTable($this->getTablePrefix().$table->getTable());
-            $table->{$flag} = true; //already set; prevents e.g. wp_2_wp_2_posts
-        }
-        unset($flag);
         return $table;
     }
 

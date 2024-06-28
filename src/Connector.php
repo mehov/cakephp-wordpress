@@ -6,6 +6,7 @@ use Cake\Core\BasePlugin;
 use Cake\Core\Configure;
 use Cake\Core\PluginApplicationInterface;
 use Cake\Http\Exception\InternalErrorException;
+use Cake\Utility\Inflector;
 
 class Connector extends Plugin implements \Cake\Event\EventListenerInterface
 {
@@ -147,9 +148,22 @@ class Connector extends Plugin implements \Cake\Event\EventListenerInterface
                 'No data source was set for '.$this->getName()
             );
         }
+        /*
+         * Make sure the table uses the right entity class
+         */
+        // If $table comes from association, getAlias() won't get us real table name
+        // So use getTable() to get the original database table name instead
+        $tableName = $table->getTable();
+        // Convert plural table name to singular entity name
+        $entityName = Inflector::classify(Inflector::underscore($tableName));
+        // Find the entity location
+        $entityLocation = $this->_locateModelClass($entityName, 'Entity');
+        // Attempt to set the entity class only if it exists
+        if ($entityLocation) {
+            $table->setEntityClass($entityLocation);
+        }
+        // Refer $table to an instance of this connector
         $table->setPluginConnector($this);
-        // Make sure the table uses the right entity class
-        $this->_attachEntity($table);
     }
 
     /**
@@ -230,27 +244,6 @@ class Connector extends Plugin implements \Cake\Event\EventListenerInterface
             throw new InternalErrorException(sprintf('Requested table %s resolves to generic %s. Make sure a concrete table class exists in %s', $tableName, get_class($table), $this->getPath().'src/Model/Table'));
         }
         return $table;
-    }
-
-    /**
-     * Looks for matching entity for given table class
-     *
-     * @param \Cake\ORM\Table $table class to attach an entity to
-     * @return void
-     */
-    private function _attachEntity($table)
-    {
-        // If $table comes from association, getAlias() won't get us real table name
-        // So use getTable() to get the original database table name instead
-        $tableName = $table->getTable();
-        // Convert plural table name to singular entity name
-        $entityName = \Cake\Utility\Inflector::classify(\Cake\Utility\Inflector::underscore($tableName));
-        // Find the entity location
-        $entityLocation = $this->_locateModelClass($entityName, 'Entity');
-        // Attempt to set the entity class only if it exists
-        if ($entityLocation) {
-            $table->setEntityClass($entityLocation);
-        }
     }
 
     /**

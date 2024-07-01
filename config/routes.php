@@ -1,0 +1,55 @@
+<?php
+
+// Read permalink_structure from Wordpress options preloaded in bootstrap.php
+$permalink_structure = \Cake\Core\Configure::read(
+    'CakePHPWordpress.Options.permalink_structure'
+);
+/*
+ * Permalink consists of two parts: base path to blog and post identifier. E.g.:
+ * - `/blog/%id%`: `/blog/` is base, `%id%` is post
+ * - `/%category%/%postname%`: `/` is base, `%category%/%postname%` is post
+ *
+ * Why is base path to blog important to know?
+ *
+ * Base path is where we host not only post identifiers, but also blog index
+ * where we list all posts, as well as other blog-related URLs, such as:
+ * - /blog/author/john-doe
+ * - /blog/category/cakephp
+ * - /blog/tag/cakephp-5
+ *
+ * Therefore we need to:
+ * 1. split permalink into a. base blog path and b. the rest;
+ * 2. define the base blog path as scoped route collection;
+ * 3. connect individual blog routes (blog index, individual post etc.) to it.
+ */
+// Split permalink_structure into array we can loop through
+$permalink_structure = explode('/', $permalink_structure);
+// Remove empty elements
+$permalink_structure = array_filter($permalink_structure);
+// Define two main logical parts $permalink_structure consists of
+$base_path = null; // base path to blog
+$route = null; // route to individual post
+// Loop through each piece of our permalink structure
+foreach ($permalink_structure as $piece) {
+    // If we haven't run into a placeholder yet
+    if (strpos($piece, '%') === false && empty($route)) {
+        // … keep appending the current piece to $base_path
+        $base_path.= '/'.$piece;
+    } else {
+        // we found a placeholder; switch to populating $route now
+        $route.= '/'.preg_replace('/%(\w+)%/', '{$1}', $piece);
+    }
+}
+// Define the main scoped route collection for our blog in this plugin
+$routes->plugin(
+    $this->getName(), // name of this plugin
+    [
+        'path' => $base_path, // we are scoping all blog-related URLs
+        '_namePrefix' => 'Blog:' // prefix internal names of these routes
+    ],
+    // Connect individual routes to our blog scope
+    function ($routes) use($route) {
+        // Individual blog-related routes will be here
+    }
+);
+

@@ -16,3 +16,10 @@ $options = $blog->Options->find('list', [
 ])->toArray();
 // TODO store options per blog symbol (requires Entities to know their symbol)
 \Cake\Core\Configure::write('CakePHPWordpress.Options', $options);
+
+// Preload all categories; 'threaded' arranges by hierarchy
+$categories = $blog->Categories->find('threaded', [
+    'parentField' => 'parent' // default is 'parent_id', Wordpress uses 'parent'
+])->toArray();
+// TODO store categories per blog symbol (requires Entities to know their symbol)
+\Cake\Core\Configure::write('CakePHPWordpress.Categories', $categories);

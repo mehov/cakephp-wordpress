@@ -49,7 +49,29 @@ $routes->plugin(
     ],
     // Connect individual routes to our blog scope
     function ($routes) use($route) {
-        // Individual blog-related routes will be here
+        // Blog index
+        $routes->connect(
+            '/',
+            ['plugin' => $this->getName(), 'controller' => 'Posts', 'action' => 'index'],
+            ['_name' => 'Posts'] // make accessible as 'Blog:Index'
+        );
+        // Individual blog post
+        $routes->connect(
+            $route,
+            ['plugin' => $this->getName(), 'controller' => 'Posts', 'action' => 'view'],
+            [
+                '_name' => 'Post', // make accessible as 'Blog:Post'
+                'pass'=> ['post_id', 'postname'], // pass only these identifiers
+                /*
+                 * Wordpress allows nested categories, so category path may
+                 * contain slashes. Allowing `/` in regular expression makes it
+                 * greedy, so it captures `paths/with/slashes` as one $category.
+                 * If this is not done, `paths/with/slashes` will be split into
+                 * multiple variables, and the route will not be matched.
+                 */
+                'category' => '[a-zA-Z0-9-_/]+', // allow slashes in $category
+            ]
+        );
     }
 );
 

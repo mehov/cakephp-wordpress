@@ -16,3 +16,14 @@
 </article>
 <hr>
 <?php endforeach; ?>
+<hr>
+<div class="row">
+    <p class="column">
+        <?= $this->Paginator->prev('Previous') ?>
+        <?= $this->Paginator->counter() ?>
+        <?= $this->Paginator->next('Next') ?>
+    </p>
+    <p class="column">
+        Pages: <?= $this->Paginator->numbers() ?>
+    </p>
+</div>

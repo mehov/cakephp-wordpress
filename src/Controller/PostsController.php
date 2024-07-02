@@ -7,12 +7,20 @@ use \Cake\Utility\Inflector;
 class PostsController extends AppController
 {
 
+    public function initialize(): void
+    {
+        parent::initialize();
+        $this->viewBuilder()->addHelper('Paginator', [
+            'templates' => $this->getPlugin().'.paginator-templates'
+        ]);
+    }
+
     public function index()
     {
         $blog = new \CakePHPWordpress\Connector();
         $query = $blog->Posts->findPublishedPosts();
         $this->set([
-            'posts' => $query->all(),
+            'posts' => $this->paginate($query),
         ]);
     }
 
@@ -54,7 +62,7 @@ class PostsController extends AppController
         // Reuse index template
         $this->viewBuilder()->setTemplate('index');
         $this->set([
-            'posts' => $query->all(),
+            'posts' => $this->paginate($query),
         ]);
     }
 }

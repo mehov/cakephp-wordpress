@@ -55,6 +55,27 @@ $routes->plugin(
             ['plugin' => $this->getName(), 'controller' => 'Posts', 'action' => 'index'],
             ['_name' => 'Posts'] // make accessible as 'Blog:Index'
         );
+        // Term Taxonomy: category
+        $routes->connect(
+            '/category/{slug}', // match Wordpress URL for categories
+            ['plugin' => $this->getName(), 'controller' => 'Posts', 'action' => 'routedTermTaxonomy'],
+            [
+                '_name' => 'category', // full route name is 'Blog:category'
+                'pass'=> ['_name', 'slug'],
+                'slug' => '[a-zA-Z0-9-_]+',
+            ]
+        );
+        // Term Taxonomy: post_tag
+        $routes->connect(
+            // WP uses the short 'tag' only in URL, elsewhere it is 'post_tag'
+            '/tag/{slug}', // match Wordpress URL for tags
+            ['plugin' => $this->getName(), 'controller' => 'Posts', 'action' => 'routedTermTaxonomy'],
+            [
+                '_name' => 'post_tag', // full route name is 'Blog:post_tag'
+                'pass'=> ['_name', 'slug'],
+                'slug' => '[a-zA-Z0-9-_]+',
+            ]
+        );
         // Individual blog post
         $routes->connect(
             $route,

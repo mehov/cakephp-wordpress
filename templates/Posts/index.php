@@ -1,3 +1,11 @@
+<?php
+if (isset($title)) {
+    $this->assign('title', $title);
+}
+if (isset($description)) {
+    $this->Html->meta('description', $description, ['block' => true]);
+}
+?>
 <div itemscope itemtype="http://schema.org/Blog">
 <?php foreach ($posts as $post): ?>
     <article itemprop="blogPost" itemscope itemtype="http://schema.org/BlogPosting">

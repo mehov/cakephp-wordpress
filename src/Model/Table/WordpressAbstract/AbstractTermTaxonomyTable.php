@@ -16,5 +16,8 @@ abstract class AbstractTermTaxonomyTable extends \CakePHPWordpress\Model\Table\P
         ]);
     }
 
-
+    public function findBySlug(\Cake\ORM\Query\SelectQuery $query, $slug)
+    {
+        return $query->contain('Terms')->where(['Terms.slug' => $slug]);
+    }
 }

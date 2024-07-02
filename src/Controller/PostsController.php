@@ -59,9 +59,13 @@ class PostsController extends AppController
             ->matching($table.'.Terms', function ($q) use ($slug) {
                 return $q->where(['Terms.slug' => $slug]);
             });
+        // Find the Term Taxonomy
+        $queryTermTaxonomy = $blog->{$table}->find('BySlug', $slug)->first();
         // Reuse index template
         $this->viewBuilder()->setTemplate('index');
         $this->set([
+            'title' => $queryTermTaxonomy->term->name,
+            'description' => $queryTermTaxonomy->description,
             'posts' => $this->paginate($query),
         ]);
     }

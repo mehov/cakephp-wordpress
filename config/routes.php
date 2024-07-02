@@ -49,6 +49,17 @@ $routes->plugin(
     ],
     // Connect individual routes to our blog scope
     function ($routes) use($route) {
+        // Sitemap
+        $routes->connect(
+            '/sitemap',
+            [
+                'plugin' => $this->getName(), 'controller' => 'Sitemaps', 'action' => 'index'
+            ],
+            [
+                '_name' => 'Sitemap', // make accessible as 'Blog:Sitemap'
+                '_ext' => 'xml',
+            ]
+        );
         // Blog index
         $routes->connect(
             '/',

@@ -15,5 +15,3 @@
     <a href="<?= $post_tag->url?>" class="button button-outline">#<?= $post_tag->term->name?></a>
 <?php endforeach; ?>
 </div>
-<?php
-debug($post);

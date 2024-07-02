@@ -1,6 +1,6 @@
 <h1><?= $post->post_title?></h1>
 <p>
-    <a href="<?= $post->url?>"><?= $post->post_date->toFormattedDateString()?></a>
+    <a href="<?= $post->url?>"><?= $post->post_modified->toFormattedDateString()?></a>
     in
 <?php foreach ($post->categories as $category): ?>
     <a href="<?= $category->url?>"><b><?= $category->term->name?></b></a>

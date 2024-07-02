@@ -4,7 +4,7 @@
         <a href="<?= $post->url ?>"><?= $post->post_title ?></a>
     </h3>
     <p>
-        <?= $post->post_date->toFormattedDateString()?> in
+        <?= $post->post_modified->toFormattedDateString()?> in
 <?php foreach ($post->categories as $category): ?>
         <a href="<?= $category->url?>"><b><?= $category->term->name?></b></a>
 <?php endforeach; ?>

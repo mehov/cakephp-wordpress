@@ -33,7 +33,7 @@ abstract class AbstractPostsTable extends \CakePHPWordpress\Model\Table\PluginTa
             'limit' => 5,
         ];
         $options += $defaults;
-        return $this->find($type, $options)->contain(['Categories', 'PostTags']);
+        return $this->find($type, ...$options)->contain(['Categories', 'PostTags']);
     }
 
     public function findPublishedPosts($type = 'all', $options = [])

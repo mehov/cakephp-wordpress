@@ -1,17 +1,21 @@
-<h1><?= $post->post_title?></h1>
-<p>
-    <a href="<?= $post->url?>"><?= $post->post_modified->toFormattedDateString()?></a>
-    in
+<article itemscope itemtype="https://schema.org/Article" itemid="<?= $post->guid?>">
+    <h1 itemprop="name headline"><?= $post->post_title?></h1>
+    <p>
+        <a href="<?= $post->url?>" itemprop="url"><time itemprop="dateModified" datetime="<?= $post->post_modified->toIso8601String()?>"><?= $post->post_modified->toFormattedDateString()?></time></a>
+        in
 <?php foreach ($post->categories as $category): ?>
-    <a href="<?= $category->url?>"><b><?= $category->term->name?></b></a>
+        <a href="<?= $category->url?>"><b><?= $category->term->name?></b></a>
 <?php endforeach; ?>
-</p>
-<hr>
-<div>
+    </p>
+    <hr>
+    <div itemprop="articleBody">
 <?= $post->post_content?>
-</div>
-<div>
+    </div>
+    <div>
 <?php foreach($post->post_tags as $post_tag): ?>
-    <a href="<?= $post_tag->url?>" class="button button-outline">#<?= $post_tag->term->name?></a>
+        <a href="<?= $post_tag->url?>" class="button button-outline">
+            #<span itemprop="keywords"><?= $post_tag->term->name?></span>
+        </a>
 <?php endforeach; ?>
-</div>
+    </div>
+</article>

@@ -1,6 +1,6 @@
-<h1><?= $post->post_title ?></h1>
+<h1><?= $post->post_title?></h1>
 <div>
-<?= $post->post_content ?>
+<?= $post->post_content?>
 </div>
 <div>
 </div>

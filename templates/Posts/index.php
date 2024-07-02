@@ -27,6 +27,7 @@ if (isset($description)) {
 <?php endforeach; ?>
 </div>
 <hr>
+<?php if ($this->Paginator->params()['pageCount'] > 1): ?>
 <div class="row">
     <p class="column">
         <?= $this->Paginator->prev('Previous') ?>
@@ -37,3 +38,4 @@ if (isset($description)) {
         Pages: <?= $this->Paginator->numbers() ?>
     </p>
 </div>
+<?php endif; ?>

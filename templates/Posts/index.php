@@ -1,8 +1,18 @@
 <?php foreach ($posts as $post): ?>
 <article>
-    <h2>
+    <h3>
         <a href="<?= $post->url ?>"><?= $post->post_title ?></a>
-    </h2>
-    <b><?= $post->ID ?></b> <b><?= $post->url ?></b>
+    </h3>
+    <p>
+        <?= $post->post_date->toFormattedDateString()?> in
+<?php foreach ($post->categories as $category): ?>
+        <a href="<?= $category->url?>"><b><?= $category->term->name?></b></a>
+<?php endforeach; ?>
+<?php foreach($post->post_tags as $post_tag): ?>
+        <a href="<?= $post_tag->url?>">#<?= $post_tag->term->name?></a>
+<?php endforeach; ?>
+    </p>
+    <p><?= $post->post_excerpt?></p>
 </article>
+<hr>
 <?php endforeach; ?>

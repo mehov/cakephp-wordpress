@@ -23,24 +23,54 @@ abstract class AbstractPostsTable extends \CakePHPWordpress\Model\Table\PluginTa
         ]);
     }
 
-    public function findPosts($type = 'all', $options = [])
+    /**
+     * Custom finder method for wp_posts that are blog posts
+     *
+     * @param \Cake\ORM\Query\SelectQuery $query
+     * @return \Cake\ORM\Query\SelectQuery
+     */
+    public function findPosts($query)
     {
-        $defaults = [
-            'conditions' => [
-                'post_type' => 'post',
-            ],
-            'order' => 'post_date DESC',
-            'limit' => 5,
-        ];
-        $options += $defaults;
-        return $this->find($type, ...$options)->contain(['Categories', 'PostTags']);
+        $alias = $query->getRepository()->getAlias();
+        return $query
+            ->where([$alias.'.post_type' => 'post'])
+            ->contain(['Categories', 'PostTags'])
+            ->order($alias.'.post_date DESC')
+        ;
     }
 
-    public function findPublishedPosts($type = 'all', $options = [])
+    /**
+     * Custom finder method for wp_posts that are pages
+     *
+     * @param \Cake\ORM\Query\SelectQuery $query
+     * @return \Cake\ORM\Query\SelectQuery
+     */
+    public function findPages($query)
     {
-        $options['conditions']['post_type'] = 'post';
-        $options['conditions']['post_status'] = 'publish';
-        return $this->findPosts($type, $options);
+        $alias = $query->getRepository()->getAlias();
+        return $query
+            ->where([$alias.'.post_type' => 'page'])
+            /*
+             * From the Wordpress Help:
+             * "Pages are usually ordered alphabetically, but you can choose
+             * your own order by entering a number (1 for first, etc.)"
+             *
+             * First, order by menu_order, and then alphabetically
+             */
+            ->order([$alias.'.menu_order ASC', $alias.'.post_title ASC'])
+        ;
+    }
+
+    /**
+     * Custom finder method for all published wp_posts (regardless of post_type)
+     *
+     * @param \Cake\ORM\Query\SelectQuery $query
+     * @return \Cake\ORM\Query\SelectQuery
+     */
+    public function findPublished($query)
+    {
+        $alias = $query->getRepository()->getAlias();
+        return $query->where([$alias.'.post_status' => 'publish']);
     }
 
 }

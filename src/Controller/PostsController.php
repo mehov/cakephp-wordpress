@@ -18,7 +18,7 @@ class PostsController extends AppController
     public function index()
     {
         $blog = new \CakePHPWordpress\Connector();
-        $query = $blog->Posts->findPublishedPosts();
+        $query = $blog->Posts->find('posts')->find('published');
         $this->set([
             'posts' => $this->paginate($query),
         ]);
@@ -32,7 +32,7 @@ class PostsController extends AppController
             $conditions['post_name'] = $identifier;
         }
         $blog = new \CakePHPWordpress\Connector();
-        $query = $blog->Posts->findPublishedPosts()->where($conditions);
+        $query = $blog->Posts->find('posts')->find('published')->where($conditions);
         $this->set([
             'post' => $query->first(),
         ]);
@@ -55,7 +55,7 @@ class PostsController extends AppController
         // Get the blog connector
         $blog = new \CakePHPWordpress\Connector();
         // Query published posts that belong to requested term
-        $query = $blog->Posts->findPublishedPosts()
+        $query = $blog->Posts->find('posts')->find('published')
             ->matching($table.'.Terms', function ($q) use ($slug) {
                 return $q->where(['Terms.slug' => $slug]);
             });

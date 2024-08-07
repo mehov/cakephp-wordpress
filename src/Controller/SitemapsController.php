@@ -12,7 +12,7 @@ class SitemapsController extends AppController
     public function index()
     {
         $blog = new \CakePHPWordpress\Connector();
-        $query = $blog->Posts->findPublishedPosts()->limit(null);
+        $query = $blog->Posts->find('posts')->find('published')->limit(null);
         $urls = [];
         foreach ($query->all() as $post) {
             $urls[] = [

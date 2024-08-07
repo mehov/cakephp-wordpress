@@ -90,7 +90,7 @@ $routes->plugin(
         // Individual blog post
         $routes->connect(
             $route,
-            ['plugin' => $this->getName(), 'controller' => 'Posts', 'action' => 'view'],
+            ['plugin' => $this->getName(), 'controller' => 'Posts', 'action' => 'viewPost'],
             [
                 '_name' => 'Post', // make accessible as 'Blog:Post'
                 'pass'=> ['post_id', 'postname'], // pass only these identifiers
@@ -102,6 +102,27 @@ $routes->plugin(
                  * multiple variables, and the route will not be matched.
                  */
                 'category' => '[a-zA-Z0-9-_/]+', // allow slashes in $category
+            ]
+        );
+    }
+);
+
+$routes->plugin(
+    $this->getName(), // name of this plugin
+    [
+        'path' => '/', // Wordpress pages don't share blog base path with posts
+        '_namePrefix' => 'Blog:' // prefix internal names of these routes
+    ],
+    function ($routes) {
+        // Important: use our custom route class for Pages
+        $routes->setRouteClass($this->getName().'.PageRoute');
+        $routes->connect(
+            '/*',
+            [
+                'plugin' => $this->getName(), 'controller' => 'Posts', 'action' => 'viewPage'
+            ],
+            [
+                '_name' => 'Page', // make accessible as Blog:Page
             ]
         );
     }

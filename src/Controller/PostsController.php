@@ -24,7 +24,7 @@ class PostsController extends AppController
         ]);
     }
 
-    public function view($identifier)
+    public function viewPost($identifier)
     {
         if (is_numeric($identifier)) {
             $conditions['ID'] = $identifier;
@@ -33,6 +33,20 @@ class PostsController extends AppController
         }
         $blog = new \CakePHPWordpress\Connector();
         $query = $blog->Posts->find('posts')->find('published')->where($conditions);
+        $this->set([
+            'post' => $query->first(),
+        ]);
+    }
+
+    public function viewPage($identifier)
+    {
+        if (is_numeric($identifier)) {
+            $conditions['ID'] = $identifier;
+        } else {
+            $conditions['post_name'] = $identifier;
+        }
+        $blog = new \CakePHPWordpress\Connector();
+        $query = $blog->Posts->find('pages')->find('published')->where($conditions);
         $this->set([
             'post' => $query->first(),
         ]);

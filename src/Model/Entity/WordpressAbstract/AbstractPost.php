@@ -6,29 +6,34 @@ abstract class AbstractPost extends \CakePHPWordpress\Model\Entity\PluginEntity
 {
 
     /**
-     * Recursively traverses a nested item structure to find all parent items for a given item.
+     * Returns all parents of a given item as a flat array starting with root
+     * ancestor in the hierarchy and going up to the item itself.
      *
-     * ("nested item structure" = categories and pages because they can have parents)
+     * Used for building URLs where path needs to include full hierarchy.
      *
+     * Works with items that can be nested and have parents: pages, categories.
      * Using categories as an example:
      *
      * This function searches through a nested array of categories to find a specific category by its ID.
      * Once the category is found, it collects the names of all its parent categories, including the category itself,
      * and stores them in a flat array in the order from root to the given category.
      *
-     * $idGetter and $slugGetter are anonymous functions because IDs and slugs
-     * in pages and categories are stored as different properties
+     * Relies on ALL items of $currentItem's type being present in $items. So
+     * whatever category is $currentItem's parent, it must be present in $items.
      *
-     * @param int $item The item for which to find the parent items.
-     * @param array $items The initial call should pass the entire nested array of items.
-     *                     Each item object should have 'id', 'term' (with 'name'), and optionally 'children'.
-     *                     As the function calls itself recursively, it passes the 'children' property of each item,
-     *                     which narrows down the search to the subtree rooted at that item.
+     * @param int $currentItem for which to find parent items to build path
+     * @param array $items Initial call: pass threaded array of all items
+     *   Recursive calls: function passes 'children' of each item it looks at,
+     *   which narrows down the search to the subtree rooted at that item.
+     *   Each item should have ID, slug, and optionally children. Because pages
+     *   and categories use different properties to store IDs and slugs, next we
+     *   receive $idGetter and $slugGetter as anonymous functions taking item as
+     *   argument and returning ID and slug respectively.
      * @param callable(\CakePHPWordpress\Model\Entity\PluginEntity): string $idGetter receives entity and returns its ID value
      * @param callable(\CakePHPWordpress\Model\Entity\PluginEntity): string $slugGetter receives entity and returns its slug value
-     * @param array &$result An array passed by reference that will be populated with the names of the parent items, including the current item.
+     * @param array &$result populated with names of parent items, including the current
      *
-     * @return bool Returns true if the item is found and its parent items are added to the result array, false otherwise.
+     * @return bool true if item is found and its parent items are added to $result, false otherwise; matters only in recursive calls
      */
     private function _flattenTreeUntilRoot($currentItem, $items, $idGetter, $slugGetter, &$result = [])
     {

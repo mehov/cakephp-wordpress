@@ -23,3 +23,11 @@ $categories = $blog->Categories->find(
 )->toArray();
 // TODO store categories per blog symbol (requires Entities to know their symbol)
 \Cake\Core\Configure::write('CakePHPWordpress.Categories', $categories);
+
+// Preload all pages; 'threaded' arranges by hierarchy
+$pages = $blog->Posts->find('pages')->find('published')->find(
+    'threaded',
+    parentField: 'post_parent' // default is 'parent_id', WP uses 'post_parent'
+)->toArray();
+// TODO store pages per blog symbol (requires Entities to know their symbol)
+\Cake\Core\Configure::write('CakePHPWordpress.Pages', $pages);

@@ -6,6 +6,6 @@ $this->Html->meta('description', $post->post_excerpt, ['block' => true]);
     <h1 itemprop="name headline"><?= $post->post_title?></h1>
     <hr>
     <div itemprop="articleBody">
-<?= $post->post_content?>
+<?= $post->the_content()?>
     </div>
 </article>

@@ -6,6 +6,27 @@ abstract class AbstractPost extends \CakePHPWordpress\Model\Entity\PluginEntity
 {
 
     /**
+     * https://developer.wordpress.org/reference/functions/get_the_content/
+     * @return string raw post (blog post or page) content
+     */
+    public function get_the_content()
+    {
+        return $this->post_content;
+    }
+
+    /**
+     * https://developer.wordpress.org/reference/functions/the_content/
+     * @return string processed post (blog post or page) content
+     */
+    public function the_content()
+    {
+        $content = $this->post_content;
+        // Expand supported shortcodes, if any
+        $content = \CakePHPWordpress\Shortcode\AbstractShortcode::expandContent($content);
+        return $content;
+    }
+
+    /**
      * Returns all parents of a given item as a flat array starting with root
      * ancestor in the hierarchy and going up to the item itself.
      *

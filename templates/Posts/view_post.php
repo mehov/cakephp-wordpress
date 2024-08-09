@@ -18,7 +18,7 @@ $this->Html->meta(
     </p>
     <hr>
     <div itemprop="articleBody">
-<?= $post->post_content?>
+<?= $post->the_content()?>
     </div>
     <div>
 <?php foreach($post->post_tags as $post_tag): ?>

@@ -61,7 +61,7 @@ abstract class AbstractShortcode
     public static function expandContent($content)
     {
         $pattern = self::get_shortcode_regex();
-        $content = preg_replace_callback( "/$pattern/", 'self::do_shortcode_tag', $content );
+        $content = preg_replace_callback( "/$pattern/", [AbstractShortcode::class, 'do_shortcode_tag'], $content );
         return $content;
     }
 

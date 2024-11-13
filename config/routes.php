@@ -1,5 +1,34 @@
 <?php
 
+/*
+ * Pages go first. PageRoute checks if a page exists and returns null if it
+ * was not found, allowing request to proceed to check posts.
+ *
+ * Unlike Pages, Posts just route to viewPost and stop. This can be a problem
+ * when posts are at `/` just like the pages (so not prefixed with e.g. `/blog`)
+ * because posts will then hijack the `/`, not continuing to check for pages.
+ */
+$routes->plugin(
+    $this->getName(), // name of this plugin
+    [
+        'path' => '/', // Wordpress pages don't share blog base path with posts
+        '_namePrefix' => 'Blog:' // prefix internal names of these routes
+    ],
+    function ($routes) {
+        // Important: use our custom route class for Pages
+        $routes->setRouteClass($this->getName().'.PageRoute');
+        $routes->connect(
+            '/*',
+            [
+                'plugin' => $this->getName(), 'controller' => 'Posts', 'action' => 'viewPage'
+            ],
+            [
+                '_name' => 'Page', // make accessible as Blog:Page
+            ]
+        );
+    }
+);
+
 // Read permalink_structure from Wordpress options preloaded in bootstrap.php
 $permalink_structure = \Cake\Core\Configure::read(
     'CakePHPWordpress.Options.permalink_structure'
@@ -39,6 +68,9 @@ foreach ($permalink_structure as $piece) {
         // we found a placeholder; switch to populating $route now
         $route.= '/'.preg_replace('/%(\w+)%/', '{$1}', $piece);
     }
+}
+if (empty($base_path)) {
+    $base_path = '/';
 }
 // Define the main scoped route collection for our blog in this plugin
 $routes->plugin(
@@ -106,25 +138,3 @@ $routes->plugin(
         );
     }
 );
-
-$routes->plugin(
-    $this->getName(), // name of this plugin
-    [
-        'path' => '/', // Wordpress pages don't share blog base path with posts
-        '_namePrefix' => 'Blog:' // prefix internal names of these routes
-    ],
-    function ($routes) {
-        // Important: use our custom route class for Pages
-        $routes->setRouteClass($this->getName().'.PageRoute');
-        $routes->connect(
-            '/*',
-            [
-                'plugin' => $this->getName(), 'controller' => 'Posts', 'action' => 'viewPage'
-            ],
-            [
-                '_name' => 'Page', // make accessible as Blog:Page
-            ]
-        );
-    }
-);
-

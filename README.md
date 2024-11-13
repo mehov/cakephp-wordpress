@@ -1,4 +1,6 @@
-## CakePHP to Wordpress connector
+# CakePHP to Wordpress connector
+
+### Installation
 
 ```
 composer require mehov/cakephp-wordpress:dev-master
@@ -20,6 +22,25 @@ $blogList = \Cake\Core\Configure::read('CakePHPWordpress.blogList');
 $blogSymbol = array_keys($blogList)[0];
 \Cake\Core\Configure::write('CakePHPWordpress.defaultBlog', $blogSymbol);
 ```
+
+### Usage
+
+#### Automatic - out of the box
+
+Your posts should automatically be available.
+
+The plugin will fetch your *Permalink structure* (as defined in your Wordpress admin - see `/wp-admin/options-permalink.php`) and connect it as a route in your host CakePHP application.
+
+For example:
+
+- **If you *Permalink structure* is `/myblog/%year%/%postname%/`**
+  
+  The plugin will identify that `myblog` is the base path and will be listening for everything under that path.
+- **If you *Permalink structure* is `/%postname%/`**
+  
+  The plugin will be listening for everything. Conflicts may happen. Check your `APP/config/routes.php` to make sure no other route is hijacking the path where you expect your Wordpress content.
+
+#### Manually fetching content
 
 ```
 // Wherever you need to get the Wordpress posts

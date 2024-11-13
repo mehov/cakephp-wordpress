@@ -64,14 +64,4 @@ class TermsTable extends \CakePHPWordpress\Model\Table\WordpressAbstract\Abstrac
 
         return $validator;
     }
-
-    /**
-     * Returns the database connection name to use by default.
-     *
-     * @return string
-     */
-    public static function defaultConnectionName(): string
-    {
-        return 'Wordpress6-clean';
-    }
 }

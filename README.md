@@ -53,7 +53,7 @@ $query = $query->all();
 
 Normally, Wordpress would render some additional CSS with your content. You will need that CSS here to make sure your content looks like it should.
 
-Provide links to the stylesheets you would like to load under `externalCss` in [`config/CakePHPWordpress-dist.php`](blob/master/config/CakePHPWordpress-dist.php).
+Provide links to the stylesheets you would like to load under `externalCss` in [`config/CakePHPWordpress-dist.php`](blob/master/config/CakePHPWordpress-dist.php). The plugin will attempt to fetch the contents of these files and cache them locally.
 
 ```php
 'externalCss' => [
@@ -65,3 +65,9 @@ Provide links to the stylesheets you would like to load under `externalCss` in [
 ```
 
 Normally, you would need `wp-includes/css/dist/block-library/style.css` as well as the inline styles that Wordpress generates dynamically. To get the latter, you can use [mehov/wordpress-export-css](https://github.com/mehov/wordpress-export-css).
+
+Remember to clear the cache if you make changes to the `externalCss` configuration.
+
+```
+bin/cake cache clear_all
+```

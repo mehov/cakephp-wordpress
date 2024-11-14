@@ -92,6 +92,20 @@ $routes->plugin(
                 '_ext' => 'xml',
             ]
         );
+        // Endpoint for fetching and caching styles configured under externalCss
+        $routes->connect(
+            '/content-css/{symbol}-{key}',
+            [
+                'plugin' => $this->getName(), 'controller' => 'Stylesheets', 'action' => 'output'
+            ],
+            [
+                '_name' => 'ContentStylesheet', // make accessible as 'Blog:ContentStylesheet'
+                '_ext' => 'css',
+                'pass'=> ['symbol', 'key'],
+                'symbol' => '[A-Z0-9]+',
+                'key' => '[a-zA-Z0-9-_]+',
+            ]
+        );
         // Blog index
         $routes->connect(
             '/',

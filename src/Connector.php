@@ -26,6 +26,7 @@ class Connector extends Plugin implements \Cake\Event\EventListenerInterface
     private $_tablePrefix;
     private $_type;
     private $_localPath;
+    private $_externalCss;
 
     /**
      * @return string
@@ -124,6 +125,22 @@ class Connector extends Plugin implements \Cake\Event\EventListenerInterface
     }
 
     /**
+     * @return array
+     */
+    public function getExternalCss()
+    {
+        return $this->_externalCss;
+    }
+
+    /**
+     * @param array $externalCss URLs to external stylesheets
+     */
+    public function setExternalCss($externalCss): void
+    {
+        $this->_externalCss = $externalCss;
+    }
+
+    /**
      * Listens to every Model.initialize. Skips models not in this plugin.
      * And every model inside this plugin is prepared.
      *
@@ -206,6 +223,10 @@ class Connector extends Plugin implements \Cake\Event\EventListenerInterface
         // If overriding model classes on App level place them in this subfolder
         if (!empty($blog['localPath'])) {
             $this->setLocalPath($blog['localPath']);
+        }
+        // If using external CSS files
+        if (!empty($blog['externalCss']) && is_array($blog['externalCss'])) {
+            $this->setExternalCss($blog['externalCss']);
         }
         // Attach this class as Model.initialize listener
         \Cake\Event\EventManager::instance()->on($this);

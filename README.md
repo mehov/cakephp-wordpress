@@ -48,3 +48,20 @@ $blog = new \CakePHPWordpress\Connector();
 $query = $blog->Posts->find('all', []);
 $query = $query->all();
 ```
+
+#### Importing CSS from your blog
+
+Normally, Wordpress would render some additional CSS with your content. You will need that CSS here to make sure your content looks like it should.
+
+Provide links to the stylesheets you would like to load under `externalCss` in [`config/CakePHPWordpress-dist.php`](blob/master/config/CakePHPWordpress-dist.php).
+
+```php
+'externalCss' => [
+    // plugin that outputs all CSS that Wordpress would use
+    'http://wordpress.example.com/wp-json/wordpress-export-css/wordpress-export-css.css',
+    // static file; optional 'foo' becomes <link id="externalCss-foo">
+    'foo' => '//wordpress.example.com/wp-includes/css/dist/block-library/style.css',
+],
+```
+
+Normally, you would need `wp-includes/css/dist/block-library/style.css` as well as the inline styles that Wordpress generates dynamically. To get the latter, you can use [mehov/wordpress-export-css](https://github.com/mehov/wordpress-export-css).

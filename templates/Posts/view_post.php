@@ -1,6 +1,14 @@
 <?php
 $this->assign('title', $post->post_title);
 $this->Html->meta('description', $post->post_excerpt, ['block' => true]);
+$externalCss = $blog->getExternalCss();
+if ($externalCss && !empty($externalCss) && is_array($externalCss)) {
+    foreach ($externalCss as $key => $url) {
+        $id = sprintf('externalCss-%s', strval($key));
+        $this->Html->css($url, ['block' => true, 'ext' => false, 'id' => $id]);
+    }
+    unset($externalCss, $key, $url, $id);
+}
 if (is_array($post->post_tags)) {
     $this->Html->meta(
         'keywords',

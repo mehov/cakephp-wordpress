@@ -14,6 +14,15 @@ return [
                 'type' => 'Wordpress6', // currently Wordpress6
                 // Local overrides expected in APP/src/Model/(Entity|Table)/$localPath
                 'localPath' => 'CakePHPWordpress', // can be any value
+                // Your Wordpress content probably relies on some CSS; link here
+                /*
+                'externalCss' => [
+                    // plugin that outputs all CSS that Wordpress would use
+                    'http://wordpress.example.com/wp-json/wordpress-export-css/wordpress-export-css.css',
+                    // static file; optional 'foo' becomes <link id="externalCss-foo">
+                    'foo' => '//wordpress.example.com/wp-includes/css/dist/block-library/style.css',
+                ],
+                */
             ],
         ],
     ],

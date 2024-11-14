@@ -34,6 +34,7 @@ class PostsController extends AppController
         $blog = new \CakePHPWordpress\Connector();
         $query = $blog->Posts->find('posts')->find('published')->where($conditions);
         $this->set([
+            'blog' => $blog,
             'post' => $query->first(),
         ]);
     }
@@ -48,6 +49,7 @@ class PostsController extends AppController
         $blog = new \CakePHPWordpress\Connector();
         $query = $blog->Posts->find('pages')->find('published')->where($conditions);
         $this->set([
+            'blog' => $blog,
             'post' => $query->first(),
         ]);
     }

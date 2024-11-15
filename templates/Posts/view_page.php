@@ -18,8 +18,12 @@ if ($externalCss && !empty($externalCss) && is_array($externalCss)) {
 ?>
 <article itemscope itemtype="https://schema.org/Article" itemid="<?= $post->guid?>">
     <h1 itemprop="name headline"><?= $post->post_title?></h1>
-    <hr>
     <div itemprop="articleBody">
 <?= $post->the_content()?>
     </div>
 </article>
+<style type="text/css">
+body > main > article > h1 {
+    display: none;
+}
+</style>

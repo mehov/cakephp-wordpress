@@ -8,26 +8,31 @@ $blogList = \Cake\Core\Configure::read('CakePHPWordpress.blogList');
 $blogSymbol = array_keys($blogList)[0];
 \Cake\Core\Configure::write('CakePHPWordpress.defaultBlog', $blogSymbol);
 
-// Preload options
 $blog = new \CakePHPWordpress\Connector();
-$options = $blog->Options->find(
-    'list', keyField: 'option_name', valueField: 'option_value'
-)->toArray();
-// TODO store options per blog symbol (requires Entities to know their symbol)
-\Cake\Core\Configure::write('CakePHPWordpress.Options', $options);
 
-// Preload all categories; 'threaded' arranges by hierarchy
-$categories = $blog->Categories->find(
-    'threaded',
-    parentField: 'parent' // default is 'parent_id', Wordpress uses 'parent'
-)->toArray();
-// TODO store categories per blog symbol (requires Entities to know their symbol)
-\Cake\Core\Configure::write('CakePHPWordpress.Categories', $categories);
+$prefetch = array(
+    'Options' => function() use($blog) {
+        return $blog->Options->find(
+            'list', keyField: 'option_name', valueField: 'option_value'
+        )->toArray();
+    },
+    'Categories' => function() use($blog) {
+        return $blog->Categories->find(
+            'threaded', // arranges by hierarchy
+            parentField: 'parent' // CakePHP expects 'parent_id', Wordpress uses 'parent'
+        )->toArray();
+    },
+    'Pages' => function() use($blog) {
+        return $blog->Posts->find('pages')->find('published')->find(
+            'threaded', // arranges by hierarchy
+            parentField: 'post_parent' // CakePHP expects 'parent_id', Wordpress uses 'parent'
+        )->toArray();
+    },
+);
 
-// Preload all pages; 'threaded' arranges by hierarchy
-$pages = $blog->Posts->find('pages')->find('published')->find(
-    'threaded',
-    parentField: 'post_parent' // default is 'parent_id', WP uses 'post_parent'
-)->toArray();
-// TODO store pages per blog symbol (requires Entities to know their symbol)
-\Cake\Core\Configure::write('CakePHPWordpress.Pages', $pages);
+foreach ($prefetch as $tableAlias => $callback) {
+    $key = sprintf('%s.%s', $this->getName(), $tableAlias);
+    $values = $callback();
+    // TODO store per blog symbol (requires Entities to know their symbol)
+    \Cake\Core\Configure::write($key, $values);
+}

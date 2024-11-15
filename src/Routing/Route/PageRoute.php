@@ -6,21 +6,21 @@ class PageRoute extends \Cake\Routing\Route\Route
 {
 
     /**
-     * Checks if $url points to a published page in wp_posts.
+     * Checks if $path points to a published page in wp_posts.
      *
      * If page exists, complete the page route with found page ID.
-     * If page doesn't exist, return null so Router tries other routes for $url.
+     * If page doesn't exist, return null so Router tries other routes for $path
      *
-     * @param string $url The URL to attempt to parse
+     * @param string $path The URL path to attempt to parse
      * @param string $method The HTTP method of the request being parsed
      * @return array|null An array of request parameters, or `null` if not found
      */
-    public function parse($url, $method): ?array
+    public function parse($path, $method): ?array
     {
         // Re-use built-in parser from parent class
-        $parsed = parent::parse($url, $method);
-        // Pass contains pieces of $url split by /; this is shorthand to them
-        $path = $parsed['pass'];
+        $parsed = parent::parse($path, $method);
+        // Pass contains pieces of $path split by /; this is shorthand to them
+        $pieces = $parsed['pass'];
         // Start the blog connector
         $blog = new \CakePHPWordpress\Connector();
         // Fetch table class for wp_posts where Wordpress stores pages
@@ -29,17 +29,17 @@ class PageRoute extends \Cake\Routing\Route\Route
         // Start building query to look requested page up
         $query = $postsTable->find('pages')->find('published');
         // Take last piece in page path, this is post_name of our final page
-        $the_page = array_pop($path);
+        $the_page = array_pop($pieces);
         $query->where([$postsAlias.'.post_name' => $the_page]);
         /*
          * If requested page path is multiple level, e.g. /company/about/contact
          * then we have to make sure all parent pages exist too. Below loop goes
-         * through remaining items in $path and adds respective joins to query.
+         * through remaining items in $pieces and adds respective joins to query.
          */
         // On each loop iteration we need to know previous alias to join parent
         $previousAlias = $postsAlias;
         // Loop through remaining path pieces after array_pop()
-        foreach (array_reverse($path) as $key => $page) {
+        foreach (array_reverse($pieces) as $key => $page) {
             $alias = $postsAlias.($key+1); // +1 so that we don't start from 0
             // Join self to look up each parent page
             $query->join(array(

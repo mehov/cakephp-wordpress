@@ -32,7 +32,11 @@ $prefetch = array(
 
 foreach ($prefetch as $tableAlias => $callback) {
     $key = sprintf('%s.%s', $this->getName(), $tableAlias);
-    $values = $callback();
+    $values = \Cake\Cache\Cache::read($key);
+    if (null === $values) {
+        $values = $callback();
+        \Cake\Cache\Cache::write($key, $values);
+    }
     // TODO store per blog symbol (requires Entities to know their symbol)
     \Cake\Core\Configure::write($key, $values);
 }

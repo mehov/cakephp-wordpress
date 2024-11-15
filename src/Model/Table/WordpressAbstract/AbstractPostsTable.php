@@ -73,4 +73,55 @@ abstract class AbstractPostsTable extends \CakePHPWordpress\Model\Table\PluginTa
         return $query->where([$alias.'.post_status' => 'publish']);
     }
 
+    /**
+     * When looking up a page by URL/path, we must make sure the whole hierarchy
+     * exists. This finder splits the path, makes sure the page on every level
+     * exists and (if any) page mentioned to the left is actually a parent to it
+     *
+     * Usage example:
+     * ```
+     * $path = '/about-us/our-story';
+     * $postsTable->find('pages')->find('published')->find('byPath', $path);
+     * ```
+     *
+     * @param \Cake\ORM\Query\SelectQuery $query
+     * @param string $path e.g. /about/story or http://example.com/about/story
+     * @return \Cake\ORM\Query\SelectQuery
+     */
+    public function findByPath($query, $path)
+    {
+        // Make sure we get the path only
+        $path = parse_url($path, PHP_URL_PATH);
+        // Trim slashes to prevent empty pieces, then split into pieces
+        $pieces = explode('/', trim($path, '/'));
+        // Take last piece in page path, this is post_name of our final page
+        $the_page = array_pop($pieces);
+        $query->where([$this->getAlias().'.post_name' => $the_page]);
+        /*
+         * If requested page path is multiple level, e.g. /company/about/contact
+         * then we have to make sure all parent pages exist too. Below loop goes
+         * through remaining items in $path and adds respective joins to query.
+         */
+        // On each loop iteration we need to know previous alias to join parent
+        $previousAlias = $this->getAlias();
+        // Loop through remaining path pieces after array_pop()
+        foreach (array_reverse($pieces) as $key => $page) {
+            $alias = $this->getAlias().($key+1); // +1 so we don't start from 0
+            // Join self to look up each parent page
+            $query->join(array(
+                'type' => 'LEFT',
+                'alias' => $alias,
+                'table' => $this->getTable(),
+                'conditions' => array(
+                    $alias.'.ID = '.$previousAlias.'.post_parent',
+                    $alias.'.post_type' => 'page',
+                    $alias.'.post_status' => 'publish',
+                ),
+            ));
+            $query->where([$alias.'.post_name' => $page]);
+            $previousAlias = $alias; // next iteration will refer this as parent
+        }
+        return $query;
+    }
+
 }

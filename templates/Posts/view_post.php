@@ -1,7 +1,7 @@
 <?php
 $this->assign('title', $post->post_title);
 $this->Html->meta('description', $post->post_excerpt, ['block' => true]);
-$externalCss = $blog->getExternalCss();
+$externalCss = $blog->getConfig('externalCss');
 if ($externalCss && !empty($externalCss) && is_array($externalCss)) {
     foreach (array_keys($externalCss) as $key) {
         $route = \Cake\Routing\Router::url([

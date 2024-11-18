@@ -49,7 +49,7 @@ class PluginTable extends \Cake\ORM\Table
         if (!$this->getPluginConnector()) {
             return parent::getTable();
         }
-        return $this->getPluginConnector()->getTablePrefix().parent::getTable();
+        return $this->getPluginConnector()->getConfig('tablePrefix') . parent::getTable();
     }
 
     /**
@@ -63,7 +63,7 @@ class PluginTable extends \Cake\ORM\Table
         if (!$this->getPluginConnector()) {
             return parent::getConnection();
         }
-        $datasource = $this->getPluginConnector()->getDatasource();
+        $datasource = $this->getPluginConnector()->getConfig('datasource');
         return \Cake\Datasource\ConnectionManager::get($datasource);
     }
 

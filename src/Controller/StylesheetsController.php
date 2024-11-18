@@ -24,7 +24,7 @@ class StylesheetsController extends AppController
         // Get blog by received blog symbol
         $blog = new \CakePHPWordpress\Connector($blogSymbol);
         // Get external CSS configuration for that blog
-        $externalCss = $blog->getExternalCss();
+        $externalCss = $blog->getConfig('externalCss');
         if (!$externalCss || empty($externalCss) || !is_array($externalCss)) {
             throw new \Cake\Http\Exception\InternalErrorException('No stylesheets defined');
         }

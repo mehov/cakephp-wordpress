@@ -9,6 +9,13 @@ use Cake\Utility\Inflector;
 class Connector extends Plugin
 {
 
+    use \Cake\Core\InstanceConfigTrait;
+
+    /**
+     * @var array expected by \Cake\Core\InstanceConfigTrait
+     */
+    protected $_defaultConfig = [];
+
     private $_symbol;
     private $_blogName;
     private $_datasource;
@@ -35,102 +42,6 @@ class Connector extends Plugin
     }
 
     /**
-     * @return string
-     */
-    public function getBlogName()
-    {
-        return $this->_blogName;
-    }
-
-    /**
-     * @param string $name
-     */
-    public function setBlogName($name)
-    {
-        $this->_blogName = $name;
-    }
-
-    /**
-     * @return string
-     */
-    public function getDatasource()
-    {
-        return $this->_datasource;
-    }
-
-    /**
-     * @param string $datasource
-     */
-    public function setDatasource($datasource)
-    {
-        $this->_datasource = $datasource;
-    }
-
-    /**
-     * @return string
-     */
-    public function getTablePrefix()
-    {
-        return $this->_tablePrefix;
-    }
-
-    /**
-     * @param string $tablePrefix
-     */
-    public function setTablePrefix($tablePrefix): void
-    {
-        $this->_tablePrefix = $tablePrefix;
-    }
-
-    /**
-     * @return string
-     */
-    public function getType()
-    {
-        return $this->_type;
-    }
-
-    /**
-     * @param string $type
-     */
-    public function setType($type)
-    {
-        $this->_type = $type;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getLocalPath()
-    {
-        return $this->_localPath;
-    }
-
-    /**
-     * @param mixed $localPath
-     */
-    public function setLocalPath($localPath)
-    {
-        $this->_localPath = $localPath;
-    }
-
-    /**
-     * @return array
-     */
-    public function getExternalCss()
-    {
-        return $this->_externalCss;
-    }
-
-    /**
-     * @param array $externalCss URLs to external stylesheets
-     */
-    public function setExternalCss($externalCss): void
-    {
-        $this->_externalCss = $externalCss;
-    }
-
-    /**
      * Listens to every Model.initialize. Skips models not in this plugin.
      * And every model inside this plugin is prepared.
      *
@@ -150,7 +61,7 @@ class Connector extends Plugin
             return;
         }
         // Throw exception if no datasource to use has been set yet
-        if (empty($this->getDatasource())) {
+        if (empty($this->getConfig('datasource'))) {
             throw new \Exception(
                 'No data source was set for '.$this->getName()
             );
@@ -200,24 +111,9 @@ class Connector extends Plugin
                 $blogSymbol, implode(', ', array_keys($blogs))
             ));
         }
-        $blog = $blogs[$blogSymbol];
         // Set the configured values
         $this->setSymbol($blogSymbol);
-        $this->setBlogName($blog['name']);
-        $this->setDatasource($blog['datasource']);
-        // If overriding model classes on App level place them in this subfolder
-        if (!empty($blog['tablePrefix'])) {
-            $this->setTablePrefix($blog['tablePrefix']);
-        }
-        $this->setType($blog['type']);
-        // If overriding model classes on App level place them in this subfolder
-        if (!empty($blog['localPath'])) {
-            $this->setLocalPath($blog['localPath']);
-        }
-        // If using external CSS files
-        if (!empty($blog['externalCss']) && is_array($blog['externalCss'])) {
-            $this->setExternalCss($blog['externalCss']);
-        }
+        $this->setConfig($blogs[$blogSymbol]);
         // Listen to every Model.initialize (filters irrelevant out later)
         \Cake\Event\EventManager::instance()->on('Model.initialize', [$this, 'onEveryModelInitialize']);
     }
@@ -234,7 +130,7 @@ class Connector extends Plugin
         $tableLocator = $tableRegistry->getTableLocator();
         $tableLocator->clear();// prevent "already exists in the registry" error
         // Make sure table is looked up in blog type folder
-        $tableLocator->addLocation('Model/Table/'.$this->getType());
+        $tableLocator->addLocation('Model/Table/'.$this->getConfig('type'));
         $tableIdentifier = $this->_locateModelClass($tableName, 'Table');
         // If the table class found is located in App itself
         if (strpos($tableIdentifier, '/') !== false) {
@@ -248,7 +144,7 @@ class Connector extends Plugin
         // Get the table
         $table = $tableLocator->get($tableIdentifier, [
             // Always ensure we're using connection configured for this plugin
-            'connectionName' => $this->getDatasource()
+            'connectionName' => $this->getConfig('datasource'),
             // …otherwise contained table may default to app's connection
         ]);
         if (get_class($table) == 'Cake\ORM\Table') {
@@ -275,7 +171,7 @@ class Connector extends Plugin
         // className() looks for exact file names, so add suffix for tables
         $lookup_name = $name . ($dir == 'Table' ? 'Table' : '');
         // If no local path configured, use only entity name, don't look further
-        if (empty($this->getLocalPath())) {
+        if (empty($this->getConfig('localPath'))) {
             return $name;
         }
         /*
@@ -287,7 +183,7 @@ class Connector extends Plugin
         // Build version-agnostic class alias we will be referring to
         $classAlias = sprintf('%s\Model\%s\%s', $this->getName(), $dir, $lookup_name);
         // Internally, the real class path depends on version from the config
-        $realClassPath = sprintf('%s\Model\%s\%s\%s', $this->getName(), $dir, $this->getType(), $lookup_name);
+        $realClassPath = sprintf('%s\Model\%s\%s\%s', $this->getName(), $dir, $this->getConfig('type'), $lookup_name);
         // Only if the alias has not been declared yet and the real class exists
         if (!\class_exists($classAlias) && \class_exists($realClassPath)) {
             //...link the "external" class alias to the real internal class path
@@ -296,7 +192,7 @@ class Connector extends Plugin
             // Actual version is picked up automatically from the config
         }
         // Local path is where overriding classes *may* be stored in App itself
-        $path = trim($this->getLocalPath(), '/') . '/' . $lookup_name;
+        $path = trim($this->getConfig('localPath'), '/') . '/' . $lookup_name;
         // See if overriding model class has been created in App itself
         if (\Cake\Core\App::className($path, 'Model/'.$dir)) {
             return $path;

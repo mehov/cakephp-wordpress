@@ -8,16 +8,8 @@ use Cake\Core\PluginApplicationInterface;
 use Cake\Http\Exception\InternalErrorException;
 use Cake\Utility\Inflector;
 
-class Connector extends Plugin implements \Cake\Event\EventListenerInterface
+class Connector extends Plugin
 {
-
-    public function implementedEvents(): array
-    {
-        return [
-            // Listens to every Model.initialize (filters relevant later)
-            'Model.initialize' => 'onEveryModelInitialize',
-        ];
-    }
 
     private $_symbol;
     private $_blogName;
@@ -228,8 +220,8 @@ class Connector extends Plugin implements \Cake\Event\EventListenerInterface
         if (!empty($blog['externalCss']) && is_array($blog['externalCss'])) {
             $this->setExternalCss($blog['externalCss']);
         }
-        // Attach this class as Model.initialize listener
-        \Cake\Event\EventManager::instance()->on($this);
+        // Listen to every Model.initialize (filters irrelevant out later)
+        \Cake\Event\EventManager::instance()->on('Model.initialize', [$this, 'onEveryModelInitialize']);
     }
 
     /**

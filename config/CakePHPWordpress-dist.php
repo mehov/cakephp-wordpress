@@ -4,7 +4,7 @@
 
 return [
     'CakePHPWordpress' => [ // Must match the name of this plugin
-        'blogList' => [
+        'siteList' => [
             'ABC' => [ // Arbitrary UPPERCASE key identifying this configuration
                 'name' => 'ABC Blog', // Display name for this blog
                 // Datasource name from APP/config/app_local.php

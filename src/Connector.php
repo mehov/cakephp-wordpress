@@ -184,14 +184,14 @@ class Connector extends Plugin
     {
         // If none provided, see if a default is configured on the app level
         if (empty($blogSymbol)) {
-            $blogSymbol = Configure::read($this->getName().'.defaultBlog');
+            $blogSymbol = Configure::read($this->getName().'.defaultSite');
         }
         // If still nothing, throw an exception
         if (empty($blogSymbol)) {
             throw new InternalErrorException('Blog symbol not provided');
         }
         // Get the blogs list from the config
-        $blogs = Configure::read($this->getName().'.blogList');
+        $blogs = Configure::read($this->getName().'.siteList');
         if (!$blogs || !is_array($blogs) || empty($blogs)) {
             throw new InternalErrorException('No blogs configured');
         }

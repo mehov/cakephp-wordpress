@@ -18,9 +18,9 @@ $this->addPlugin(\CakePHPWordpress\Plugin::class, ['bootstrap' => true, 'routes'
 
 ```
 // src/Controller/AppController.php::initialize()
-$blogList = \Cake\Core\Configure::read('CakePHPWordpress.blogList');
+$blogList = \Cake\Core\Configure::read('CakePHPWordpress.siteList');
 $blogSymbol = array_keys($blogList)[0];
-\Cake\Core\Configure::write('CakePHPWordpress.defaultBlog', $blogSymbol);
+\Cake\Core\Configure::write('CakePHPWordpress.defaultSite', $blogSymbol);
 ```
 
 ### Usage

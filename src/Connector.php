@@ -2,9 +2,7 @@
 
 namespace CakePHPWordpress;
 
-use Cake\Core\BasePlugin;
 use Cake\Core\Configure;
-use Cake\Core\PluginApplicationInterface;
 use Cake\Http\Exception\InternalErrorException;
 use Cake\Utility\Inflector;
 

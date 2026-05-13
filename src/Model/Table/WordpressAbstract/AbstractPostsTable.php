@@ -35,7 +35,7 @@ abstract class AbstractPostsTable extends \CakePHPWordpress\Model\Table\PluginTa
         return $query
             ->where([$alias.'.post_type' => 'post'])
             ->contain(['Categories', 'PostTags'])
-            ->order($alias.'.post_date DESC')
+            ->orderBy($alias.'.post_date DESC')
         ;
     }
 
@@ -57,7 +57,7 @@ abstract class AbstractPostsTable extends \CakePHPWordpress\Model\Table\PluginTa
              *
              * First, order by menu_order, and then alphabetically
              */
-            ->order([$alias.'.menu_order ASC', $alias.'.post_title ASC'])
+            ->orderBy([$alias.'.menu_order ASC', $alias.'.post_title ASC'])
         ;
     }
 

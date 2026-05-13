@@ -5,7 +5,7 @@
     "keywords": ["cakephp", "wordpress", "headless", "blog"],
     "require": {
         "cakephp/cakephp": ">=4.0",
-        "bakeoff/cms-connector": "dev-master"
+        "bakeoff/cms-connector": "^1"
     },
     "autoload": {
         "psr-4": {
